@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="http://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <style>
+      div.text-center {
+        margin: 36px 0;
+      }
+      div.col-md-6 {
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Logo</a>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Menu item 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Menu item 2</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="text-center">
+      <p>Text section</p>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 1 heatmap-->
+              <h5 class="card-title">Heat Map</h5>
+              <p class="card-text">description.</p>
+              <div id="heatmap"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 2 Line chart -->
+              <h5 class="card-title">Scatter Plot</h5>
+              <p class="card-text">description.</p>
+              <div id="scatter"></div>
+              <label for="data-select">Select</label>
+              <select id="data-select">
+                <option value="data1">Set 1</option>
+                <option value="data2">Set 2</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 3 content here -->
+              <h5 class="card-title">Stacked area</h5>
+              <p class="card-text">description.</p>
+              <div id="stacked_area"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 4 content here -->
+              <h5 class="card-title">Choropleth map</h5>
+              <p class="card-text">description.</p>
+
+              <div id="connected_scatter_plot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 5 content here -->
+              <h5 class="card-title">Card 4 header</h5>
+              <p class="card-text">Card 4 description.</p>
+              <div id="####"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 6 content here -->
+              <h5 class="card-title">Card 4 header</h5>
+              <p class="card-text">Card 4 description.</p>
+              <div id="####"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 7 content here -->
+              <h5 class="card-title">Card 4 header</h5>
+              <p class="card-text">Card 4 description.</p>
+              <div id="####"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 8 content here -->
+              <h5 class="card-title">Card 4 header</h5>
+              <p class="card-text">Card 4 description.</p>
+              <div id="####"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <!-- Card 9 content here -->
+              <h5 class="card-title">Card 4 header</h5>
+              <p class="card-text">Card 4 description.</p>
+              <div id="####"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Heat map-->
+    <script>
+      function heatmap() {
+        // set the dimensions and margins of the graph
+
+        var margin = { top: 30, right: 30, bottom: 30, left: 30 },
+          width = 450 - margin.left - margin.right,
+          height = 450 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3
+          .select('#heatmap')
+          .append('svg')
+          .attr('viewBox', '0 0 450 450')
+          .append('g')
+          .attr(
+            'transform',
+            'translate(' + margin.left + ',' + margin.top + ')'
+          );
+
+        // Labels of row and columns
+        var myGroups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+        var myVars = [
+          'v1',
+          'v2',
+          'v3',
+          'v4',
+          'v5',
+          'v6',
+          'v7',
+          'v8',
+          'v9',
+          'v10',
+        ];
+
+        // Build X scales and axis:
+        var x = d3.scaleBand().range([0, width]).domain(myGroups).padding(0.01);
+        svg
+          .append('g')
+          .attr('transform', 'translate(0,' + height + ')')
+          .call(d3.axisBottom(x));
+
+        // Build X scales and axis:
+        var y = d3.scaleBand().range([height, 0]).domain(myVars).padding(0.01);
+        svg.append('g').call(d3.axisLeft(y));
+
+        // Build color scale
+        var myColor = d3
+          .scaleLinear()
+          .range(['white', '#69b3a2'])
+          .domain([1, 100]);
+
+        //Read the data
+        d3.csv(
+          'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv',
+          function (data) {
+            // create a tooltip
+            var tooltip = d3
+              .select('#heatmap')
+              .append('div')
+              .style('opacity', 0)
+              .attr('class', 'tooltip')
+              .style('background-color', 'white')
+              .style('border', 'solid')
+              .style('border-width', '2px')
+              .style('border-radius', '5px')
+              .style('padding', '5px');
+
+            // Three function that change the tooltip when user hover / move / leave a cell
+            var mouseover = function (d) {
+              tooltip.style('opacity', 1);
+            };
+            var mousemove = function (d) {
+              tooltip
+                .html('The exact value of<br>this cell is: ' + d.value)
+                .style('left', d3.mouse(this)[0] + 70 + 'px')
+                .style('top', d3.mouse(this)[1] + 'px');
+            };
+            var mouseleave = function (d) {
+              tooltip.style('opacity', 0);
+            };
+
+            // add the squares
+            svg
+              .selectAll()
+              .data(data, function (d) {
+                return d.group + ':' + d.variable;
+              })
+              .enter()
+              .append('rect')
+              .attr('x', function (d) {
+                return x(d.group);
+              })
+              .attr('y', function (d) {
+                return y(d.variable);
+              })
+              .attr('width', x.bandwidth())
+              .attr('height', y.bandwidth())
+              .style('fill', function (d) {
+                return myColor(d.value);
+              })
+              .on('mouseover', mouseover)
+              .on('mousemove', mousemove)
+              .on('mouseleave', mouseleave);
+          }
+        );
+      }
+    </script>
+    <!--Line chart-->
+    <script>
+      function scattergraph() {
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+          width = 460 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3
+          .select('#scatter')
+          .append('svg')
+          .attr('viewBox', '0 0 450 450')
+          .append('g')
+          .attr(
+            'transform',
+            'translate(' + margin.left + ',' + margin.top + ')'
+          );
+
+        //Read the data
+        d3.csv(
+          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv',
+          function (data) {
+            // Add X axis
+            var x = d3.scaleLinear().domain([0, 4000]).range([0, width]);
+            svg
+              .append('g')
+              .attr('transform', 'translate(0,' + height + ')')
+              .call(d3.axisBottom(x));
+
+            // Add Y axis
+            var y = d3.scaleLinear().domain([0, 500000]).range([height, 0]);
+            svg.append('g').call(d3.axisLeft(y));
+
+            // Add dots
+            svg
+              .append('g')
+              .selectAll('dot')
+              .data(data)
+              .enter()
+              .append('circle')
+              .attr('cx', function (d) {
+                return x(d.GrLivArea);
+              })
+              .attr('cy', function (d) {
+                return y(d.SalePrice);
+              })
+              .attr('r', 1.5)
+              .style('fill', '#69b3a2');
+          }
+        );
+      }
+    </script>
+    <!-- Stack area-->
+    <script>
+      function stacked_area() {
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 30, bottom: 30, left: 50 },
+          width = 460 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3
+          .select('#stacked_area')
+          .append('svg')
+          .attr('viewBox', '0 0 450 450')
+          .append('g')
+          .attr(
+            'transform',
+            'translate(' + margin.left + ',' + margin.top + ')'
+          );
+
+        //Read the data
+        d3.csv(
+          'https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv',
+
+          // When reading the csv, I must format variables:
+          function (d) {
+            return { date: d3.timeParse('%Y-%m-%d')(d.date), value: d.value };
+          },
+
+          // Now I can use this dataset:
+          function (data) {
+            // Add X axis --> it is a date format
+            var x = d3
+              .scaleTime()
+              .domain(
+                d3.extent(data, function (d) {
+                  return d.date;
+                })
+              )
+              .range([0, width]);
+            svg
+              .append('g')
+              .attr('transform', 'translate(0,' + height + ')')
+              .call(d3.axisBottom(x));
+
+            // Add Y axis
+            var y = d3
+              .scaleLinear()
+              .domain([
+                0,
+                d3.max(data, function (d) {
+                  return +d.value;
+                }),
+              ])
+              .range([height, 0]);
+            svg.append('g').call(d3.axisLeft(y));
+
+            // Add the area
+            svg
+              .append('path')
+              .datum(data)
+              .attr('fill', '#cce5df')
+              .attr('stroke', '#69b3a2')
+              .attr('stroke-width', 1.5)
+              .attr(
+                'd',
+                d3
+                  .area()
+                  .x(function (d) {
+                    return x(d.date);
+                  })
+                  .y0(y(0))
+                  .y1(function (d) {
+                    return y(d.value);
+                  })
+              );
+          }
+        );
+      }
+    </script>
+    <!--Choropleth_map-->
+    <script>
+      function connected_scatter_plot() {
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+          width = 460 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3
+          .select('#connected_scatter_plot')
+          .append('svg')
+          .attr('viewBox', '0 0 450 450')
+          .append('g')
+          .attr(
+            'transform',
+            'translate(' + margin.left + ',' + margin.top + ')'
+          );
+
+        //Read the data
+        d3.csv(
+          'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/connectedscatter.csv',
+
+          // When reading the csv, I must format variables:
+          function (d) {
+            return { date: d3.timeParse('%Y-%m-%d')(d.date), value: d.value };
+          },
+
+          // Now I can use this dataset:
+          function (data) {
+            // Add X axis --> it is a date format
+            var x = d3
+              .scaleTime()
+              .domain(
+                d3.extent(data, function (d) {
+                  return d.date;
+                })
+              )
+              .range([0, width]);
+            svg
+              .append('g')
+              .attr('transform', 'translate(0,' + height + ')')
+              .call(d3.axisBottom(x));
+
+            // Add Y axis
+            var y = d3.scaleLinear().domain([8000, 9200]).range([height, 0]);
+            svg.append('g').call(d3.axisLeft(y));
+
+            // Add the line
+            svg
+              .append('path')
+              .datum(data)
+              .attr('fill', 'none')
+              .attr('stroke', 'black')
+              .attr('stroke-width', 1.5)
+              .attr(
+                'd',
+                d3
+                  .line()
+                  .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+                  .x(function (d) {
+                    return x(d.date);
+                  })
+                  .y(function (d) {
+                    return y(d.value);
+                  })
+              );
+
+            // create a tooltip
+            var Tooltip = d3
+              .select('#connected_scatter_plot')
+              .append('div')
+              .style('opacity', 0)
+              .attr('class', 'tooltip')
+              .style('background-color', 'white')
+              .style('border', 'solid')
+              .style('border-width', '2px')
+              .style('border-radius', '5px')
+              .style('padding', '5px');
+
+            // Three function that change the tooltip when user hover / move / leave a cell
+            var mouseover = function (d) {
+              Tooltip.style('opacity', 1);
+            };
+            var mousemove = function (d) {
+              Tooltip.html('Exact value: ' + d.value)
+                .style('left', d3.mouse(this)[0] + 70 + 'px')
+                .style('top', d3.mouse(this)[1] + 'px');
+            };
+            var mouseleave = function (d) {
+              Tooltip.style('opacity', 0);
+            };
+
+            // Add the points
+            svg
+              .append('g')
+              .selectAll('dot')
+              .data(data)
+              .enter()
+              .append('circle')
+              .attr('class', 'myCircle')
+              .attr('cx', function (d) {
+                return x(d.date);
+              })
+              .attr('cy', function (d) {
+                return y(d.value);
+              })
+              .attr('r', 8)
+              .attr('stroke', '#69b3a2')
+              .attr('stroke-width', 3)
+              .attr('fill', 'white')
+              .on('mouseover', mouseover)
+              .on('mousemove', mousemove)
+              .on('mouseleave', mouseleave);
+          }
+        );
+      }
+    </script>
+    <!--Call function-->
+    <script>
+      heatmap();
+      scattergraph();
+      stacked_area();
+      connected_scatter_plot();
+    </script>
+  </body>
+</html>
